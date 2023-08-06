@@ -2,6 +2,8 @@
 
 Want to make your Godot game a bajillion times better? Add DOOM to it! This GDExtension allows you to do just that...
 
+![](readme_assets/screenshot.png)
+
 This repository structure is based on [GDExtensionTemplate](https://github.com/asmaloney/GDExtensionTemplate) and is currently set up to work with the **[Godot 4.1](https://github.com/godotengine/godot/releases/tag/4.1-stable)** release.
 
 ## Prerequisites
@@ -59,8 +61,9 @@ func _init_doom():
 	if doom == null:
 		doom = Doom.new()
 	doom.initialize()
-	self.material_override = StandardMaterial3D.new()
-	self.material_override.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	if self.material_override == null:
+		self.material_override = StandardMaterial3D.new()
+		self.material_override.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	self.material_override.albedo_texture = ImageTexture.create_from_image(doom.get_framebuffer())
 
 func check_key(godot_key, doom_key, key_is_pressed):
