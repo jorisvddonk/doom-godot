@@ -4,7 +4,7 @@ Want to make your Godot game a bajillion times better? Add DOOM to it! This GDEx
 
 ![](readme_assets/screenshot.png)
 
-This repository structure is based on [GDExtensionTemplate](https://github.com/asmaloney/GDExtensionTemplate) and is currently set up to work with the **[Godot 4.1](https://github.com/godotengine/godot/releases/tag/4.1-stable)** release.
+This repository structure is based on [GDExtensionTemplate](https://github.com/asmaloney/GDExtensionTemplate) and is currently set up to work with the **[Godot 4.1](https://github.com/godotengine/godot/releases/tag/4.1-stable)** release. [PureDOOM](https://github.com/Daivuk/PureDOOM) source port is used for the actual DOOM implementation, and is included as a submodule (see [extern/puredoom](extern/puredoom/)).
 
 ## Prerequisites
 
@@ -99,5 +99,5 @@ func _process(delta):
 ```
 
 2. Create a MeshInstance3D and attach the script to it!
-3. Copy a DOOM IWAD to your project root folder / the current folder, and name it "DOOM.WAD"
+3. Copy a DOOM IWAD to your project root folder, or instruct your end-users to copy such an IWAD to whatever your game's working directory is. Make sure the IWAD is named "DOOM.WAD". Users without a licensed copy of DOOM can use [FreeDOOM](https://freedoom.github.io/download.html), instead.
 
