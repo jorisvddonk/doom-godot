@@ -1,6 +1,7 @@
 #include "godot_cpp/classes/image_texture.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/classes/node.hpp"
+#include "godot_cpp/classes/timer.hpp"
 #include "godot_cpp/variant/utility_functions.hpp"
 #include "godot_cpp/variant/packed_byte_array.hpp"
 #include "godot_cpp/classes/audio_server.hpp"
@@ -43,6 +44,24 @@ void doom_exit_impl(int code)
 
 void Doom::initialize()
 {
+#ifdef WIN32
+    unsigned long err;
+    if (!(err = midiOutOpen(&this->handle, (UINT)-1, 0, 0, CALLBACK_NULL))) {
+        has_midi = true;
+        Timer *t = new Timer();
+        this->add_child(t);
+        t->set_paused(false);
+        t->set_autostart(true);
+        t->set_one_shot(false);
+        double wait = 0.00714285714;
+        t->set_wait_time(wait);
+        t->connect("timeout", this->get("midi_process"));
+        t->start();
+        UtilityFunctions::print( "Midi initialized" );
+    } else {
+        UtilityFunctions::print( "Could not initialize MIDI subsystem" );
+    }
+#endif
     UtilityFunctions::print("initializing doom...");
 	char* argv[] = { "doom", "-file", "DOOM.WAD", NULL };
     doom_set_print(&doom_print_impl);
@@ -74,16 +93,21 @@ void Doom::key_up(doom_key_t key)
     doom_key_up(key);
 }
 
-int Doom::tick_midi()
+void Doom::midi_process()
 {
-    return doom_tick_midi();
+    int midi_msg;
+    while ((midi_msg = doom_tick_midi()) != 0) {
+#ifdef WIN32
+        unsigned long err;
+        err = midiOutShortMsg(this->handle, midi_msg);
+#endif
+    }
 }
 
 Doom::Doom()
 {
     UtilityFunctions::print( "Doom - constructor called." );
 }
-
 
 void Doom::_bind_methods()
 {
@@ -93,7 +117,7 @@ void Doom::_bind_methods()
     ClassDB::bind_method( D_METHOD( "update" ), &Doom::update );
     ClassDB::bind_method( D_METHOD( "key_down" ), &Doom::key_down );
     ClassDB::bind_method( D_METHOD( "key_up" ), &Doom::key_up );
-    ClassDB::bind_method( D_METHOD( "tick_midi" ), &Doom::tick_midi );
+    ClassDB::bind_method( D_METHOD( "midi_process" ), &Doom::midi_process );
 
     // Properties
     // Signals

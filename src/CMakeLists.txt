@@ -19,3 +19,7 @@ target_include_directories( ${PROJECT_NAME}
     PRIVATE
         "src"
 )
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE winmm.lib)
+endif (WIN32)

@@ -60,6 +60,7 @@ var active = false
 func _init_doom():
 	if doom == null:
 		doom = Doom.new()
+		add_child(doom)
 	doom.initialize()
 	if self.material_override == null:
 		self.material_override = StandardMaterial3D.new()
@@ -89,11 +90,6 @@ func _unhandled_key_input(event):
 
 func _process(delta):
 	if doom != null:
-		var z = 1
-		while z > 0:
-			z = doom.tick_midi()
-			# TODO: find a way to play this!
-			
 		doom.update()
 		self.material_override.albedo_texture.set_image(doom.get_framebuffer())
 ```

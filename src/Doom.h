@@ -11,6 +11,12 @@
 
 #include "../extern/puredoom/PureDOOM.h"
 
+#ifdef WIN32
+#include <windows.h>
+#include <stdio.h>
+#include <mmsystem.h>
+#endif
+
 using namespace godot;
 
 class Doom : public Node
@@ -24,7 +30,7 @@ public:
     void update();
     void key_down(doom_key_t key);
     void key_up(doom_key_t key);
-    int tick_midi();
+    void midi_process();
 
     Doom();
 protected:
@@ -32,6 +38,10 @@ protected:
 private:
     PackedByteArray pba;
     Ref<Image> image;
+    bool has_midi = false;
+#ifdef WIN32
+	HMIDIOUT handle;
+#endif
 };
 
 VARIANT_ENUM_CAST(doom_key_t);
